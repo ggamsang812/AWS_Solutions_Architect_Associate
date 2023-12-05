@@ -1,0 +1,60 @@
+Section 3 - EC2
+  Lesson 4 - When you're trying to connect to EC2 using SSH
+    0. First you need to install a open SSH client  
+    1. Put the .pem file where you can see the .pem file(key) when you type in ls on the ssh and .pem shows up
+    2. On your ssh, run the following: ssh -i "us-east-kp.pem" ec2-user@ec2-52-3-220-153.compute-1.amazonaws.com
+    3. You might run into this warning: WARNING: UNPROTECTED PRIVATE KEY FILE!
+      -> it means we need to change the permission on the file and this is something you might need to do if you're on a linux or a mac machine
+      -> Do this: chmod 600 us-east-kp.pem
+    4. Rerun the step2 command again. 
+
+  Lesson 5 - RDP to Windows instances
+    0. Windows instances is listening for connections on the remote desktop protocol port which is 3389
+    1. Security group will have to have the RDP in the inboud rules
+    2. You will need your own RDP client
+    3. Public DNS, User Name and Password when you "Connect to instance" -> RDP client ; will be needed
+      - For Password, you will need to provide .pem by clicking "Get password"
+    3. Public DNS will be the "Computer" part and maybe go to details and edit the user name to the User Name and password to the Password from above
+
+  Lesson 6 - User Data and Metadata
+    User Data - gives you the ability to run command when the instance starts up
+    Metadata - return the information about the instance that's recorded locally (like public-ipv4)
+
+  Lesson 9 - Access Keys and IAM Roles
+    - To remove credentials saved in EC2 or your PC when you ran "aws configure" :
+        => cd to .aws folder
+        => rm -rf *
+    - There is an image file that shows the risk of using access keys to access services
+    - Access Keys are associated with the IAM user
+    - With the role, You make the IAM role with the right policy and attach it to the EC2
+      => EC2 will now have access to whatever's in the role policy
+
+  Lesson 10 - Status Checks and Monitoring
+    - System status checks(if this doesn't pass, there is something wrong with the underlying hardware, therefore will need attention from AWS) & Instance status Checks(AWS is checking software and the network configuration of your EC2 instance itself - making sure your operating system is configured correctly, etc.. - Your(AWS customer's) involovment will be needed)
+
+  Lesson 11 - EC2 Placement Groups
+    - Cluster => Low-latency, tightly-coupled, HPC applications => one AZ
+    - Partition => do not share underlying hardware, distributed and replicated workloads (you want other partitions to be running when others fail), Hadoop, Cassandra, and Kafka => within AZ or across AZ upto 7 but separate AWS rack
+    - Spread => distinct underlying hardware => separate AWS rack => failure of one never effects others
+
+  Lesson 12 - Network Interfaces
+    - ENIs can be in different subnets within the same AZ; not across different AZs
+    - Elastic network interface (ENI) - Normal use
+    - Elastic network adapter (ENA) - higher bandwidth and lower latency; must choose supported instance type
+    - Elastic Fabric Adapter (EFA) - for high performance computing and MPI and ML use cases; tightly coupled application; all instance types can use
+
+  Lesson 13 - Public, Private and Elastic IP Addresses
+    - Public IP address is dynamic, so it will have different address whenever you start your instance
+    - Private stays the same
+    - Elastic IP is public but static address and can be assigned to our network interface
+      => you are charged if not used 
+      => associated with a private IP address on the instance 
+      => can be moved between instances and ENA 
+      => if the instance fails, you can move the ENI that has EIP to the new instance / if the instances are in seperate AZ, then you can move only the EIP to the ENI in different AZ
+
+  Lesson 14 - Network Address Translation(NAT) for Public Addresses
+    - While you're in the instance, you won't be able to find the public IP address.
+    - This is because your instance doesn't know about the public IP address; it only know the private IP address
+    - The public IP address is associated with the ethernet interface and ENI/ENA is asoociated with the private IP address.
+    - Internet Gateway(IGW) performs 1:1 NAT which means when a packet goes out from your instance it will have src address of the private IP and dest address to whatever => IGW will NAT the private IP to public IP in the packet and send out to dest address
+    - When packet comes back from dest, the packet will have public IP as dest address => IGW will NAT public IP to private => to the instance
