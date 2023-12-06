@@ -1,0 +1,6 @@
+Section 4 
+  Lesson 6 - Types of Elastic Load Balancer
+    - Application Load Balancer => operates at the request level => HTTP/HTTPS => Supports IP addresses based routing
+    - Network Load Balancer => Operates at the connection level => lessons to TCP, TLS, UDP => new generation of load balancer => offers ultra high performance and low latency and TLS offloading at scale => allows static IP address
+    - Classic Load Balancer => should not be in the test
+    - Gateway Load Balancer => very new => used in front of virtual appliances such as firewalls, DDoS, IDS(intrusion detection Systems)/IPS(intrusion protection system) and deep packet inspection systems => uses GENEVE protocol on port 6081
