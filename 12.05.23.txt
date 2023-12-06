@@ -1,0 +1,8 @@
+Section 3 
+  Lesson 21 - Nitro Instances and Nitro Enclaves
+    - underlying platform for the next generation of EC2 instances 
+    - breaks apart various functions into these different modules
+    - AWS Nitro Enclaves => isolated compute environments
+
+Section 3 - done 
+  
