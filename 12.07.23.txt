@@ -1,4 +1,7 @@
 Section 4
   Lesson 12 - Amazon EC2 Scaling Policies
     Dynamic Scaling - Target Tracking => calculates average cpu utilization and if it exceeds the set percent then it will create another instance => AWS recommand scaling on metrics with a 1-minute frequency => CloudWatch will send a report to the ASG and triggers
-    Dynamic Scaling - Simple Scaling => has the alarm to 
+    Dynamic Scaling - Simple Scaling => has an alarm set to maybe a cpu usage and if it excesses it will launch 2 instances and wait 300 seconds
+    Dynamic Scaling - Step Scaling => has an alarm set like simple scaling, but the difference is that at certain cpu usage, you can launch 4 instead of 2 or anything else. 
+    Schedule Scaling => schedule set to scale at certain time and launch x amount of instances  
+    Predictive Scaling => AWS will predict what's going to happen and then launch instances at the right time based on the prior event history
