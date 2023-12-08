@@ -1,0 +1,4 @@
+Section 4
+  Lesson 12 - Amazon EC2 Scaling Policies
+    Dynamic Scaling - Target Tracking => calculates average cpu utilization and if it exceeds the set percent then it will create another instance => AWS recommand scaling on metrics with a 1-minute frequency => CloudWatch will send a report to the ASG and triggers
+    Dynamic Scaling - Simple Scaling => has the alarm to 
