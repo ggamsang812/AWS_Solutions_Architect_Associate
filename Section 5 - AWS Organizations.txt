@@ -1,0 +1,16 @@
+12/9/2023
+Section 5 - AWS Organizations
+  Lesson 2
+    - allows consolidate multiple AWS accounts into an organization that you create and centrally manage
+    - Two feature sets: 
+      1. Consolidated Billing 
+        - Playing Account - independent and cannot access resources of other accounts
+        - Linked Account - all linked accounts are independent
+      2. All features
+    - Group accounts into Organizational Units (OUs)
+    - Service Control Policies (SCPs) => control tagging and the available API actions
+    - can enable CloudTrail in management account and apply to members => useful for compliance purposes to make sure that all accounts are adhering into those requirements 
+    * You can create accounts programmatically using the Organizations API
+    * Enable AWS SSO using on-prem directory
+
+  
