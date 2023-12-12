@@ -1,0 +1,20 @@
+12/11/2023
+Secion 6
+    Lesson 1 - Introduction
+        - VPC is a logically isolated potion of the AWS Cloud which you can deploy your own AWS resources in a private space
+    
+    Lesson 2 - The AWS Global Infrastructure
+        - Building blocks of AWS Cloud around the world
+        - AZ composed of one or more data centers
+        - Region is a physical location in the world and is independent 
+        - multiple AZ in each region
+        
+        - AWS Outposts => hardware from AWS that you can deploy AWS instances in your own data center => also able to conntect to AWS region and resources
+        - AWS Local Zone => when you need low latency between your application and data center 
+        - AWS Wavelength Zone => for 5G conntectivity with mobile with low latency
+        - Amazon CloudFront Origins, Edge Cache, Edge location => for video 
+
+        - Launch virtual servers and databases globally very easily
+
+    Lesson 3 - IPv4 Addressing Primer
+        - 

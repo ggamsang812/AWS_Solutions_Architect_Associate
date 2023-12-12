@@ -13,4 +13,6 @@ Section 5 - AWS Organizations
     * You can create accounts programmatically using the Organizations API
     * Enable AWS SSO using on-prem directory
 
-  
+12/11/2023
+  Lesson 4 - 
+    - why did my note disappear..?
