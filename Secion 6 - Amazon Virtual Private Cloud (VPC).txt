@@ -16,5 +16,23 @@ Secion 6
 
         - Launch virtual servers and databases globally very easily
 
+12/16/2023
     Lesson 3 - IPv4 Addressing Primer
-        - 
+        - CIDR => technic so we can subdivide our networks into the ones that have the right balance of number of network that we have and the number of host per network
+    Lesson 4 - Amazon VPC Overview
+        - VPC router takes care of routing within the VPC and outside of the VPC => we don't really see this, we see route table
+        - Have one internet gateway attached per VPC and used to connect to the internet
+        - You can create multiple VPCs within each region (can create upto 5)
+            => each VPC has a different block of IP address/CIDR(Classless Interdomain Routing)  => each subnet has a block of IP addresses from the CIDR block
+        - Egress-only Internet Gateway => for IPv6
+    
+12/17/2023
+    Lesson 5 - Defining VPC CIDR Blocks
+        - https://www.site24x7.com/tools/ipv4-subnetcalculator.html 
+        - CIDR block size can be between /16 and /28
+        - Ensure you have enough networks and hosts => you get to decide this only once
+        - Bigger CIDR blocks are typically better (more flexibility)
+        - Smaller subnets are OK for most use cases
+        - Consider deploying application tiers per subnet
+        - VPC Peering, across all VPC in all Regions / accounts you want to connect requires non-overlapping CIDR blocks
+            => just avoid overlapping CIDR blocks
