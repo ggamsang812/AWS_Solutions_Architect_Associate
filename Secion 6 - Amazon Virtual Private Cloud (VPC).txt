@@ -36,3 +36,98 @@ Secion 6
         - Consider deploying application tiers per subnet
         - VPC Peering, across all VPC in all Regions / accounts you want to connect requires non-overlapping CIDR blocks
             => just avoid overlapping CIDR blocks
+
+12/18/2023
+    Lesson 8 - Security Groups(Stateful) and Network ACLs(Stateless Firewalls)
+        - NACLs(Network Access Control Lists) apply at the subnet level and apply only to traffic entering/exiting the subnet
+        - Security Groups apply at the instance level / network interface level of the EC2 instance
+        - Statefull firewall allows the return traffic automatically
+            - Security Groups support allow rules only
+                => A source can bbe an IP address or security group ID
+            - Best practice will be to put a security group on ALBs and EC2 instances => with inbound and outbound rules
+        - Stateless firewall checks for an allow rule for both connections
+            - NACLs have an explicit deny => they have allow and deny rules
+            - Rules are processed in order => so we number our rules 
+                => this order is import because if you reach the allow/deny the connection, it won't move on to the next rule #. The process will just end.
+    
+    Lesson 9 
+        - One of the signs of security group issue is when you're trying to connect to the EC2 instance, it times out. It will have spinning motion but it will time out eventually
+        - Even if security group allows if the ACL doesn't allow or if it denies, it will follow the deny rule
+    
+    Lesson 10 - VPC Peering
+        - allows routing for those addresses internally between those VPCs.
+            => It's not going out to the internet => It's using the AWS global netwrok to route traffic between the VPC
+            => Encrypted => never touches internet => it moves between regions/account/VPCs
+            => uses private IPv4 and IPv6 addresses
+            => Remember not to overlap CIDR blocks!
+            => No Transitive conntections => ex) A to B to C then A to C connection? No  => need to create another VPC Peering for that
+                => Full mesh required
+            - It becomes massy with lots of VPC connections
+            - Private addresses of the instances that we use for the VPC to VPC communication
+                => instances can be in public or private subnet
+            - Security group with source CIDR address, and route table of target CIDR address
+                => same address but one for comingg in, and one for going out
+    
+    Lesson - VPC Endpoints
+        - VPC Interface Endpoints => Don't want our instance to have pulic IP, don't want to be routed out to the internet/NAT Gateway
+            => ENI is created in the subnet => Each interface endpoints can connect to one of many AWS services 
+            => connect to AWS PrivateLink powered service
+            => To connect EC2 instance to pulic AWS service using a private IP 
+        - VPC Gateway Endpoints => for routing to S3/DynamoDB from EC2
+            => requires route table entry with the prefix list of s3 and the gateway ID
+            => IAM policies can be applied to endpoints
+            => Bucket policies can access to endpoint source 
+    
+    Lesson - AWS Client VPN
+        - A way that you can connect your client computer to the AWS data center, VPC via VPN connection
+        - Create VPN Endpoint which is associated with subnets
+        - Client VPN network interfaces created in subnet
+        - Local route table will have destination(the VPC) and the Gateway(the VPN Endpoint)
+    
+    Lesson Site-to-Site(S2S) VPN
+        - Another type of VPN
+        - Deploy VGW(Virtual Private Gateway) on the AWS site
+        - Customer Gateway is deployed on the customer side 
+        - Route talbe points to destination(CIDR of corporate data center) and target(VGW)
+
+    Lesson VPN CloudHub 
+        - Architectual Pattern that you can use to utilize the AWS Site-to-Site VPN technology
+        - Remote offices connect to teh VGW in a hub-and-spoke model => AWS VPC is the hub and the spokes go out to each of customer offices
+            => Deploy Customer Gateway to each offices and each will have unique BGP ASN(Border Gateway Protocol Autonomous System Number)
+        - Network traffic is between VGW and Customer Gateway; and Customer Gateway to Customer Gateway via VGW
+    
+    Lesson AWS Direct Connect (DX)
+        - Private connection to AWS via AWS Direct Connect Location which has AWS cage(rack full of their own equipments) and customer/partner cage(your own equipments)
+            => in the both cage, we have router => AWS cage with AWS Direct Connect endpoint and customer cage with customer router
+            => cross-connect between the DX routers
+            => another routers in both AWS Region and corporate data center 
+            => customer routers need to be physical connected
+        - This is physical fibre connection 1Gbps/10Gbps/50Mbps/500Mbps/100Gbps(This one is new)
+        - This might be good lower cost option for organizations that transfer large volumes of data
+        - To connect to VPC in the same AWS Region using a VGW, you create Private VIF(Virtual Interface)
+        - This Private VIF will send data across this DX line
+        - What about connecting to the public space? 
+            => You need Public VIF (CANNOT connect to the internet)
+        - What about multiple VPC in the same region? 
+            => Multiple Private VIFs / hosted VIFs to share VIFs with other AWS accounts
+        - DX Connections are NOT encrypted!!!
+            => What if I want to encrypt? IPSec S2S VPN connection over VIF to add encryption in transit 
+    
+    Lesson Direct Connect Gateway
+        - DX for multiple Regions
+        - Without DX Gateway, corporate requires regional offices or long distance physical links, which are expensive
+        - With DX Gateway, you only need one link to one DX location => Private VIF is associated with the DX Gateway => DX Gateway is associated with a VGW 
+            => Network traffic can be routed from on-premises to any VPC 
+            => Does NOT allow VGWs to send traffic to each other 
+    
+    Lesson Transit Gateway(TGW)
+        **CGW(customer Gateway) => the generic name describing a device that can speak IPSec => almost same as customer router
+        - For several VPC, using VPC Peering and connetiong CGW(in corporate offices) to VGW(in VPC) is going to be complicated
+        - With Transit Gateway, you just have one in the middle and will interconnect VPCs and on-premises network
+            => same with DX Gateway which will connect to TGW
+
+    Lesson Using IPv6 in a VPC
+        - IPv4 is running out and it need NAT to use
+        - To use v6, we'll have IPv4 and IPv6 CIDR
+        - publicly routable (no NAT)
+        - An Egree-only internet Gateway allows IPv6 traffic outbound but not inbound
