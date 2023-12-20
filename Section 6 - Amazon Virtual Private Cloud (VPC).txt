@@ -131,3 +131,7 @@ Secion 6
         - To use v6, we'll have IPv4 and IPv6 CIDR
         - publicly routable (no NAT)
         - An Egree-only internet Gateway allows IPv6 traffic outbound but not inbound
+    
+    Lesson VPC Flow Logs
+        - capture information about tthe IP traffic going to and from network interfaces in a VPC
+        
