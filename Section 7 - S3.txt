@@ -2,6 +2,8 @@
     Lesson 1
         - Object based storage service via API
         **S3 scope is global because the URLs that we use to access S3 with are global, but your data is always stored within a single region unless you configure it otherwise
+        ** Strong read after write consistency model in S3
+        ** uses standard-based REST web interfaces to work with objects
     
     Lesson 2 - Amazon S3 Overview
         - Accessing objects in a bucket by HTTP protocol is used with REST API(GET, PUT, POST, SELECT, DELETE)
@@ -91,4 +93,42 @@
             => some people just need to see the object for a period of time but doesn't have AWS account
         - use CLI to generate presigned URL with duration of the URL and share the generate URL
 
+12/20/2023
+    Lesson - Multipart Upload & Transfer Acceleration
+        1) Multipart Upload - uploads objects in parts independently, in parallel and in any order
+            => split big file into peaces and upload them => recommended for object of 100MB or larger
+            => Must be used for objects larger than 5GB 
+            => Benefits: optimization of throughput bc you're sending parts in parallel; You can recover from the failed part quite easily
+        2) Transfer Acceleration - uses CloudFront edge(content delivery network) locations to improve performance of transfers from client to S3 bucket
+            => AWS will only charge you if there's a performance improvement
+            => enable this at the bucket level 
+            => might be useful when your S3 is in US and application is somewhere else and we have edge location nearby
     
+    Lesson - S3 Select and Glacier Select
+        => SQL expression to retrieve individual file from zip archive
+            => trying to retrieve a file from S3 folder/zip file => use the AWS Lambda with SQL select expression
+        => enables you to access object or object within object without taking out the entire object
+    
+    Lesson - Server Access Logging
+        - Provides detailed records for the requests that are made to a bucket 
+        - Need to configure a separate bucket as a the destination (You can get into infinite loop if you use monitoring bucket as logging bucket)
+        - Must Grant write permissions to the S3 Log Delivery group on destination bucket
+
+    Lesson - Cross-Origin Resource Sharing(CORS)
+        - Allows requests from an origin to another origin
+        - Origin is defined by DNS name, protocol, and port
+        - CORS configuration must be added to allow requests from the other origin
+    
+    Lesson - Cross Account Access
+        - Resource-based policies/ACL and IAM policies for programmatic-only access to S3 object
+        - Cross-account IAM roles for programmatic and console access
+    
+    Lesson - S3 Object Lambda
+        - uses Lambda functions that modifies to process the output of S3 GET request 
+            => Lambda can do something to process the response of the GET request 
+        - GetObject request from client trigger Lmabda to process and modify data before returning it to the application
+        - Prebuilt Lambda functions that detect personally identifiable information(PII)
+            => name, addresses, dates, credit card number and ssn
+            => PII Access Control - detects PII and restricts access
+            => PII Redaction - detects PII and returns documents with the PII redacted
+            => Decompression - decrypts objects compressed with zip 
