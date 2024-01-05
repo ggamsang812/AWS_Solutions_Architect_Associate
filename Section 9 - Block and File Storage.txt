@@ -1,0 +1,101 @@
+01/03/2024
+    Lesson - Block vs File vs Object Storage
+        - Think of block as Hard Disk Drive => you can partition the block and create volumes(like C drive and D drive)
+        - Network Attached Storage(NAS) Server devices are file based storage systems
+            => Network Locations attached to you computer is file storage 
+            => NAS is stack of Block storage that is shared over the network
+            => Can't partition or edit drivers; all done in NAS itself; just read/write after mapping it
+        - Object Storage systems - user uploads objects using a web brower via HTTP protocol with REST API
+            => Low cost; Massive scalable, No hierarchy; objects can be files, videos, images etc. 
+    
+    Lesson - Amazon EBS Deployment and Volume Types
+        - EC2 instances must be in the same AZ as the EBS volume; cannot connect across AZ
+            => but you can replicate the EBS snapshots across AZ and connect to it
+        EBS Multi-Attach:
+        - up to 16 Nitro system-based EC2 instances can be attached to a single volume
+            => EBS must be a provisioned IOPS io1 volume 
+            => must be within AZ
+        Volume Types:
+        - gp2 as default (general purpose SSD) => Low-latency interactive apps => Development and test environments
+        - io1 (Provisioned IOPS SSD) => high IOPS => I/O intensive database workloads
+        - st1 (Throughput Optimized HHD) => big data; data warehouses => cheap but low IOPS
+        - sc1 (Cold HHD) => for scenarios where the lowest storage cost is important
+        
+        - EBS volume data persists independently of the life of the instance; as well as 
+            => Root EBS volumes(ones with OS) are deleted on termination of the instance by default
+            => Extra non-boot volumes are not deleted
+
+01/04/2023
+    Lesson - Amazon EBS Copying, Sharing and Encryption
+        - EC2 accesses EBS over the network; not attached over the network like EFS
+        1) All snapshots are stored in S3 which is regional => copy the snapshot in S3 to other AZ 
+        - All the snapshots are capable of restoring volume 
+            => to help free up the storage space? => delete all the old snapshots
+        2) Create Amazon Machine Image(AMI) from the volume snapshot; use AMI to create another volume in another AZ
+    
+    Lesson - Amazon EBS snapshots and Data Lifecycle Manager(DLM)
+        - automate the creation, retention, and deletion of EBS snapshots and EBS-backed AMIs
+        - reduce storage costs by deleting outdated backups
+        - create disaster recovery backup policies that back up data to isolated accounts
+    Lesson - EC2 instance store volumes
+        - Two different volume for EC2: EBS vs instance store
+        - EBS is connected over the network
+        - instance store is volumes that is physically attached to the host on the host server (rack)
+            => ephemeral (data is lost when the instance is powered down)
+            => high performance local disks; 
+            => ideal for temporary storage of information that changes frequently, buffers, caches, or scratch data
+            => root devices are created from AMI templates stored on S3
+            => cannot be detached/reattached 
+
+01/05/2024
+    Lesson - Using RAID with EBS
+        - Redundant Array of Independent Disks (RAID) 
+            => take multiple physical server with physical disk and create a RAID array from those Independent disk
+        - benefit for performance and redundancy 
+        - need to configure this in operating system(EBS); not provided by AWS itself
+        - RAID 0 (performance) => striping data across 2 or more disks => one fails, others fails too
+        - RAID 1 (redundancy / fault tolerance) => mirroring data across disks
+            => oen fails, others still working 
+            => data gets sent to 2 EBS volumes(2 copy) => double the amount of volume needed
+        ** operating system level; not through AWS; understand the RAID 0 and 1 **
+
+    Lesson - Amazon Elastic File System (EFS)
+        - File-based storage system using the Network File System(NFS) protocol
+        - Create EFS in the VPC and connect thousands of instances simultaneously
+        - only available for Linux instances 
+        - with peering connection, you can connect from other VPCs
+        - with VPN / Direct Connect, can connect from on-premise client
+        - scalable + high performance
+        - use DNS for same region; use mount target IP address across region, AWS accounts
+        - control access to files and directories using user and group-level permissions (POSIX-compliant)
+    
+    Lesson - Amazon FSx
+        - Two fully managed third-party file systems:
+        1) Amazon FSx for Windows File Server - Windows-based applications
+            => High availability - replicates data within AZ
+            => Multi-AZ - file systems include an active and standby file server in separate AZs
+            => With VPN / Direct Connect, connect on-premise (Windows) client 
+            => Full support for the SMB protocol, Windows NTFS, and Microsoft Active Directory (AD) integration
+        2) Amazon FSx for Lustre - compute-intensive workloads
+            => Machine Learning, High performance computing(HPC), Video processing, Financial modeling, Electronic design automation(EDA)
+            => can access S3 objects as files natively through S3
+            => File system with S3 integration
+            => provides POSIX-compliant file system interface 
+            => can connect on-premise client for cloud bursting and data migration 
+
+    Lesson - AWS Storage Gateway
+        - Service to connect on-premise storage to AWS
+        - File Gateway: provides a virtual on-premise file server
+            => for on-premises applications and EC2-based applications
+            => object-based workloads in S3 with local caching
+        - Volume Gateway: block-based volumes
+            => Cached Volume mode - entire dataset + cache of most frequently accessed data 
+            => Stored Volume mode - entire dataset backed up to S3 (asynchronously)
+        - Tape Gateway: used for backup with popular backup software
+            => S3 Standard is used when writing to tapes
+            => Once tapes are ejected from the backup app, they are stored in one of these classes
+        
+    **AWS DataSync - provides a fast and simple way to securely sync existing file systems into Amazon EFS
+        => to transfer data to EFS => newer version of EFS FileSync 
+        => copies file data and file system metadata such as ownership, timestamps and access permissions
+    
