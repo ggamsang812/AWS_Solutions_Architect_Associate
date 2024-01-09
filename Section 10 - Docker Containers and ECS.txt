@@ -1,0 +1,45 @@
+01/05/2024
+    Lesson - Docker Container and Microservices
+        - Every VM/instance needs an operating system which uses significant resources
+        - Docker Containers shares OS and Docker Engine 
+            => Container includes all the code, settings and dependencies for running the application
+            => each container is isolated from other containers 
+            => size is very small compare to having the entire OS => starts up very quickly; resource efficient
+        - Microservices can be spread across hosts / many instances of each microservices can run on each host
+
+    Lesson - Amazon Elastic Container Service(ECS)
+        - ECS Task is a running Docker container => An ECS Task is created from Task Definition
+        - Docker images are stored in Amazon Elastic Container Registry(ECR) / Docker Hub
+            => images are the files/code that get brought down to run the containers 
+        - When task is launched, it's going to pull the image from the registry defined in the Task Definition
+        - ECS Services are used to maintain a desired count of tasks => can use Auto Scaling Group 
+        - Serverless with AWS Fargate - managed for you and fully scalable; no underlying infrastructure
+        - Fully managed container orchestration - control plane is managed for you => no need to build it 
+        - Docker support - full support for Docker containers; can use Docker Compose CLI
+        - Windows container support
+        - Elastic Load Balancing integration - distribute traffic across containers using ALB or NLB for EC2
+        - Amazon ECS Anywhere (NEW - Not on test) - enables the use of Amazon ECS control plane to manage on-premises implementations
+        - Cluster = Logical grouping of EC2 instances
+        - Container instance = EC2 instance running the ECS agent
+        - Task Definition = Blueprint that describes how a docker container should launch
+        - Task = Running container using settings in a Task Definition
+        - Service = Long running tasks - how many tasks are running; can control task count with Auto Scaling and attach an ELB 
+
+    Lesson - Amazon ECS Launch Types
+        EC2 Launch Type:
+        -
+
+        Fargate Launch Type:
+        -
+
+    Lesson - Amazon ECS and IAM Roles
+
+    Lesson - Scaling Amazon ECS
+
+    Lesson - Amazon ECS and ALB
+
+    Lesson - Amazon Elastic Kubernetes Service(EKS)
+
+    Lesson - Amazon Elastic Container Registry(ECR)
+
+    Lesson - AWS App Runner
