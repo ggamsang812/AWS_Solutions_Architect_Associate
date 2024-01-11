@@ -1,1 +1,60 @@
 12/20/2023
+
+
+01/02/2023
+    Lesson - Amazon CloudFront Caching and Behaviors
+        - Regional Edge Cache is located between Edge location and CloudFront Origins
+            => there are 12 regional edge caches with larger cache bandwidth for holding more contents
+        - TTL is default to 24 hrs; Decreasing the TTL is best for Dynamic content; Increasing TTL is better for performance and reducing load on origin
+        - You can specify the path pattern (behaviors) determines where to send the request
+            => .jpg to origin1; .mp4 to origin2; and default to origin1
+        - can configure CloudFront to forward headers in the viewer request to the origin
+            => CloudFront can then cache multiple versions of an object based on the values in one or more request headers
+        1) Forward all headers to your origin (objects are not cached)
+        2) Forward a whitelist of headers that you specify
+        3) Forward only the default headers (doesn't cache objects based on values in request headers)
+    
+    Lesson - CloudFront Signed URLs and OAI/OAC
+        Signed URLs:
+        - Provide more control over access to content 
+        - signed URL provided by serverless application (ex.lambda) => application will use this URL to access distribution
+        - should be used for individual files and clients that don't support cookies 
+        Signed Cookies:
+        - similar to signed URLs but used when you don't want to change URLs
+        - used when you want to provide access to multiple restricted files (NOT for individual files)
+        OAI:
+        - For custom origin with S3 bucket configured as static website 
+        - Essentially like a user account within CloudFront and the bucket policy will only allow access from this user account
+            => Bucket policy "principle" will have specific OAI 
+            => No other CloudFront with different OAI or the user won't be able to reach the origin
+        - This has been deprecated
+        OAC:
+        - OAI but more additional use cases; AWS recommands this instead of OAI
+        - Also requires an S3 bucket policy but a little different from OAI
+            => under "principle", service will be just CloudFront and under "Condition", it will have arn of the specific CloudFront
+    
+    Lesson - CloudFront SSL/TLS and Server Name Indication(SNI)
+        - Can have SSL through AWS Certificate Manager(ACM) / 3rd parth CA => must be issued in us-east-1 for CloudFront certificate
+        - default CF domain name can be changed using CNAMES 
+        - S3 Origin => has its own certificate already => can connect to it using HTTPS => cannot be changed
+        - Custom Origin => certificate can be ACM for ALB / third-party for EC2
+        - Origin certificates must be public certificate
+        SNI:
+        - Multiple certificates share the same IP with SNI 
+        - Have multiple SSL/TLS certificates which corresponds with different domain names running on the same IP address on the CF
+        - usually will have to buy different IP address on CF, but not with SNI 
+        - works with browers/clients released after 2010 - otherwise need dedicated IP 
+    
+    Lesson - Lambda @ Edge
+        - Run Node.js and Python Lambda functions to customize the content CF delivers
+        - executes functions closer to the viewer
+        - Can be run at the following points:
+            1) After CloudFront receives a request from a viewer (viewer request)
+            2) Before CloudFront forwards the request  to the origin (origin request)
+            3) After CF receives the response from the origin (origin response)
+            4) Before CF forwards the response to the viewer (viewer response)
+
+    Lesson - AWS Global Accelerator(GA)
+        - Utilize the AWS Global Network to send data to your application
+            => means avoiding the internet for large part of the data transfer 
+            => you get better bandwidth, latency and a lot of consistencies (much more than pulic internet)
