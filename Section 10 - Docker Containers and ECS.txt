@@ -25,21 +25,84 @@
         - Task = Running container using settings in a Task Definition
         - Service = Long running tasks - how many tasks are running; can control task count with Auto Scaling and attach an ELB 
 
+01/10/2024
     Lesson - Amazon ECS Launch Types
         EC2 Launch Type:
-        -
+        - Create ECS EC2 Cluster and ECS Service in it and ECS Container instance in the Service
+        - explicitly provision EC2 instances that you manage and charged per running EC2 instance
+            => ECS Container instance with Task in it
+        - Docker volumes(EBS), EFS, and FSx for Windows File server
+        - You handle cluster optimization
+            => service: how many tasks and underlying instances are running 
+        - More granular control over infrastructure
 
         Fargate Launch Type:
-        -
+        - ECS Fargate Cluster -> ECS Service -> Task 
+        - Fargate will automatically provision resources and manage compute resources
+        - Charged for running Tasks
+        - EFS integration; You don't get the integration with Docker volumes or the FSx(Windows File Server)
+        - Fargate handles cluster optimization
+        - Limited control; infrastructure is automated 
 
     Lesson - Amazon ECS and IAM Roles
+        EC2 Cluster:
+        - ECS Container instance will have IAM Instance Role 
+            => container instance IAM role provides permissions to the host
+        - Task will have IAM Task Role 
+            => ECS task IAM role provides permissions to the container; NOT to the host
+        ** permissions assigned to the instance role are also supplied to the task that are running on top of that instance **
+            => if you have different container for different role, you need to Task Role
+        
+        Fargate:
+        - Only have the IAM Task Role which is defined in Task Definition / run task API 
+            => define the role when you run the task / through Task Definition
+            => For multiple applications running in containers and they come from different definition
+                => have different roles for those different applications specified in their Task Definition
+                => using least privilege principle here; giving only the role the application need in the cluster                
 
     Lesson - Scaling Amazon ECS
+        1) Service Auto Scaling
+        - use Application Auto Scaling service to adjust the desired cout of the container / task running
+        - supports target tracking, step, and scheduled scaling policies
+
+        2) Cluster Auto Scaling
+        - use Capacity Provider to scale the number of EC2 cluster instances using EC2 Auto Scaling Group (for number of host)
+            => Capacity Provider reports information about utilization of the underlying EC2 instance
+        - Looks at the Container instance level to increase / decrease the number
 
     Lesson - Amazon ECS and ALB
+        - can distribute income traffic with the load balancer / ALB with Container Awareness
+        - Each task is running a web service on port 80; meaning Container port is 80
+            => but they also have host post which is dynamic port allocated
+                => any connection coming to the host port should be forwarded to this specific task
+            => ALB knows about this host post, so it forwards connection to the host port
+        ** NAT Gateway is required for tasks in private subnets to access the internet 
 
     Lesson - Amazon Elastic Kubernetes Service(EKS)
+        - managed service for running Kubernetes applications in the cloud or on-premises
+        - open-source system for automating deployment, scaling, and management of containerized applications
+        - standardize container orchestration tool set for managing your containers across different environments(AWS/on-premises)
+        1) Hybrid Deployment - manages cluster across hybrid environments(AWS/on-premises)
+        2) Batch Processing - Plan, schedule and execute batch workloads on your EKS cluster using Kubernetes Jobs API
+        3) Machine Learning - use Kubeflow with EKS for ML; use latest EC2 GPU-powered instances, including Inferentia
+        4) Web Applications - build web app that automatically scale up and down and highly available across AZ
+        - Groups of containers are known as Pods in Kubernetes
+        - EKS supports load balancing with ALB, NLB, CLB
+        - Cluster Auto Scaling:
+            => Vertical Pod Autoscaler - adjust CPU and memory 
+            => Horizontal Pod Autoscaler - number of pods  
+        - Workload Auto Scaling: 
+            => Kubernetes Cluster Autoscaler with AWS scaling groups
+            => Karpenter open source autoscaling project with directly Amazon EC2 fleet 
+        - Amazon EKS Distro => Distribution of Kubernetes with the same dependencies as Amazon EKS
+            => manually run Kubernetes clusters anywhere
+        - Amazon ECS and EKS Anywhere
+            => can run ECS/EKS Anywhere on their own on-premises infrastructure on bare metal servers
+                => their own hardware
+            => deploy ECS/EKS Anywhere using VMware vSphere
 
     Lesson - Amazon Elastic Container Registry(ECR)
+        - 
 
     Lesson - AWS App Runner
+        - 
