@@ -101,8 +101,21 @@
                 => their own hardware
             => deploy ECS/EKS Anywhere using VMware vSphere
 
+01/11/2024
     Lesson - Amazon Elastic Container Registry(ECR)
-        - 
+        - Docker tools and Dooker CLI commands such as push, pull, list, and tag
+        - Can be accessed from any Docker environment-in the cloud, on-premises, or on your machine
+        - Container images and artifacts are stored in S3 
+        - Everyone can access container images in public repositories 
+        -  Access Control List(ACL) for private repositories
+            => IAM access control - Set policies to define access to container images in private repositories
+            => Resource-based policies - Access control down to the individual API action such as create, list, describe, delete and get
 
     Lesson - AWS App Runner
-        - 
+        - Fully managed service for deploying containerized web apps and APIs
+        - Create Service with source, auto scaling, load balancing, health check, networking, and observability added
+        - Source can either be code in GitHub Repo or images in ECR Registry 
+        - After create service, we won't get much visibility on it;
+            => it will only be an url where we can visit our application
+        - Plat as a Service(PaaS) Solution with all components managed; just bring code and container image
+        - Similar to beanstalk but focused on Web app and APIs and integration with GitHub and ECR
