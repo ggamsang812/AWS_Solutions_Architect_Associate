@@ -1,0 +1,32 @@
+1/20/24
+  Lesson - Serverless Service and Event-Driven Architecture
+    - Event-Driven Architecture is not for only the serverless services; it can be used for services running in servers
+    - No need to set/secure/manage instancces with serverless; No operational overhead
+    - Can be very cheap; using Lambda to compute instead of a whole instance
+
+  Lesson - AWS Lambda
+    - serverless compute service in event-driven architecture based on triggers
+    - You don't pay for code until it actually runs; pay for compute time; pay for amount of memory you've assigned => possibly will adds more cpu to the function as well
+    - Has maxium execution time of 15 mins; in this case use EC2
+    - executes code only when needed and scales automatically
+    - 3 ways to invocate Lambda
+      1) Synchronous: done by CLI, SDK, and API Gateway; wait for the function to process the event and return a response; error handling happens client side(retries, exponential backoff)
+      2) Asynchronous: done by S3, SNS, CloudWatch Events; events is queued for processing and a response is returned immediately; retries up to 3 times; processing must be idempotent(response from the retries must be the same)
+      3) Event source mapping: SQS, Kinesis Data Streams, DynamoDB Streams; Lambda does the polling(Lambda is checking with these sources to find if there is anything it needs to process); records are processed in order(except for SQS standard); SQS can trigger Lambda as well
+    - Lambda Function Concurrency => Additional functions are initialized up to the burst or account limit
+      => Gets "Rate exceeded" or a 429 error when limit has been met
+    ** Lambda will need proper roles added to execute on a targeted service **
+
+  Lesson - Application Integration Services Overview
+    -
+
+  Lesson - Amazon SQS
+    -
+
+  Lesson - Amazon SNS
+
+  Lesson - AWS Step Functions
+
+  Lesson - Amazon EventBridge
+
+  Lesson - Amazon API Gateway
