@@ -18,15 +18,39 @@
     ** Lambda will need proper roles added to execute on a targeted service **
 
   Lesson - Application Integration Services Overview
-    -
+    1) SQS - Messaging queue; building distributed / decoupled application; Provides messaging semantics
+    2) SNS - Set up, operate, and send notifications from the cloud
+    3) Step functions - AWS service components with visual workflow; order processing workflow
+    4) Simple Workflow Service - Human-enabled workflows like an order fulfillment system or for procedural requests; AWS recommends using Step Functions
+    5) Amazon MQ - Message broker service for Apache Active MQ and RabbitMQ; supports industry standard APIs and protocols; migrate queue to AWS
+    6) Amazon Kinesis - collect, process and analyze streaming data; from IoT devices for later processing; shard level
 
   Lesson - Amazon SQS
-    -
+    - Pull-based; dynamically scales 
+    - Standard Queue - Best-Effort Ordering; unlimited throughput
+    - FIFO Queue - First In First Out Delivery; high throughput; requires Message Group ID and Message Deduplication ID
+    - SQS - Dead Letter Queue => configuration for setting aside the failed message
+    - Long Polling => ways to retrieve messages from SQS queues => waits for message to arrive; can lower costs; enabled at the queue level or API level using WaitTimeSeconds
+    - Short Polling => returns immediately(even if the message queue is empty)
 
   Lesson - Amazon SNS
+    - Push-based; highly available, durable, secure, fully managed publisher/subscriber messaging service 
+    - provides topics for high-throughput, push-based, many-to-many messaging
+    - Multiple recipients can be grouped using Topics which is an "access point" for allowing recipients to dynamically subscribe for identical copies of the same notification 
+    - SNS + SQS Fan-out => can subscribe one or more SQS queues to one SNS topic 
 
   Lesson - AWS Step Functions
+    - used to build distributed applications as a series of steps in a visual workflow
+    - quickly build and run state machine to execute the steps of your appilcation
+    - scalable and highly available; define your app as a state machine; create tasks, sequential steps, parallel steps branching paths or timers
 
-  Lesson - Amazon EventBridge
+  Lesson - Amazon EventBridge 
+    - used to be known as CloudWatch Event
+    - Event source => Event => EventBridge event bus => Destination(Targets)
 
   Lesson - Amazon API Gateway
+    - Fully managed service for publishing, maintaining, monitoring, and securing APIs
+    - All of the APIs created with Amazon API Gateway expose HTTPS endpoints only
+    - API endpoint type can be: Edge-optimized(for global user base); Regional(for regional user base)
+    - Caching => can cache the endpoint's response; reduce number of calls to the backend and improve latency of requests to the API
+    - Throttling => API Gateway sets a limit on a steady-state rate and a burst of request submissions against all APIs in your account; will get 419 error response 
