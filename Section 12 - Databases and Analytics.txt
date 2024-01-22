@@ -1,0 +1,120 @@
+1/21/24
+	Lesson - Types of Database
+		- Relational vs. Non-Relational
+		- Operational vs. Analytical => Online Transaction Processing(OLTP) vs. Online Analaytics Processing(OLAP) => short transaction and simple queries vs. long transactions and complex queries 
+			=> ex) we'll have operational DBs receive data and data warehouse performs analytics on it
+
+	Lesson - Amazon Relational Database Service (RDS)
+		- Runs on EC2 instances; so you must choose an instance type
+		- RDS supports the following relational database: Amazon Aurora, MySQL, MariaDB, Oracle, Microsoft SQL Server, PostgreSQL => anything else will need to be installed on EC2
+		- Scale up with using larger instance type with more processing power and RAM
+		- Disaster Recovery and Scaling Out: Have a RDS Master; have RDS Standby in other AZ(multi-AZ option) for disaster recovery 
+			=> Read Replicas(in the same AZ) are used for scaling database queries (reads only; write is still done to RDS Master; scaling out)
+		- SQL database; OLTP; easy to setup, highly available, fault tolerant, and scalable; common use cases include online stores and banking systems; can encrypt RDS instances, snapshots at rest and connections to RDS through KMS
+		
+	Lesson - Amazon RDS Backup and Recovery
+		- Automatic backups have upto 35 days of retention period for backup data; Manual backups does not expire 
+		- OS and DB patching can require taking the database offline; a weekly maintenance window is configured by default or you can choose your own maintenance window
+
+	Lesson - Amazon RDS Security
+		- public IP can connect to RDS from the internet 
+		- can have security group attached to the RDS; instance will have seperate security group that allows the RDS security group
+		- Can have SSL/TLS encryption for in-transit encryption from application to the database 
+		- DB Volume + DB Snapshot encryption at rest with RDS encryption (Advance Encryption Standard 256 bit - AES 256)
+		- can only enable encryption for RDS DB instance when you create it; not after; including disalbing encryption that you alreay encrypted
+		- AES 256 is very strong encryption standard but it has minimal performance impact on RDS
+		- Use KMS for managing encryption keys
+		- read replica will have same encryption status as the primary
+			=> encrypted read replica of unencrypted DB instance(x)
+		- same KMS key used for same Region as the primary (if not, different KMS key)
+		- In case you want to encrypt an unencrypted RDS: create snapshot of EBS Volume => copy the snapshot with encrypted status => point the encrypted snapshot to the Volume and to the New RDS instance (new endpoint)
+
+	Lesson - Amazon Aurora
+		- AWS database offering in the RDS family; MySQL(5 times faster) and PostgreSQL(3 times faster)-compatible relational database built for the cloud
+		- distributed, self-healing storage system that auto-scales up to 128TB pper database instance 
+		- Fault-Tolerant: have replicas across 3 AZs with a single logical volume; Replicas scale out read requests; can promote Replica to primary; can use Auto Scaling to add Replicas for read traffic on database; up to 15 
+		- Serverless => can only access through VPC or Direct Connect - not VPN => means database is not running all the time; waits for the traffic and then it gets instantiated 
+		- MySQL Replica => up to 5; cross-region; high impact on primary(actually uses SQL database engine which leads to performance impact); act as failover target but can lose minutes of data; no automated failover
+
+	Lesson - Amazon Aurora Deployment Options
+		- Cross-Region Replica with Aurora MySQL 
+		- Aurora Global Database => replication uses the Aurora storage layer => Applications can connect to the cluster Reader Endpoint
+		- Aurora Multi-Master => within Region, all nodes allow reads/writes; available for MySQL only; up to 4 read/write nodes; single Region only; cannot have cross-Region replicas; restart DB instances without impactign other instance
+		- Aurora Serverless => infrequently used applications; new applications; variable/unpredictable workloads; development and test database; multi-tenant applications; way that you can scale based on performance and you don't have database running all the time => so no database to manage when not using it
+
+	Lesson - Amazon RDS Proxy
+		- fully managed database proxy for RDS; across multiple AZs; increases scalability, fault tolerance, and security; for serverless application scales unpredictably 
+		- we put RDS Proxy between application(Lambda) and Aurora/RDS => Proxy now creates pool of connections to that database => Lambda connects to the connection in the Connectiono Pool and utilize conntection to the database
+			=> Reduces stress on CPU/RAM; increase efficiency; high availability with failover; control authentication methods 
+
+	Lesson - Amazon RDS Anti-Patterns and Alternatives
+		- When do we not use RDS database?
+		- DB Types other than: MySQL, MariaDB, Oracle, SQL Server, PostgreSQL => use EC2 for anything else
+		- need root access to the OS (install software such as management tools) 
+		- S3 => Lots of large binary objects (BLOBs)
+		- DynamoDB => Automated Scalability; Name/Value Data Structure; not well structured or unpredictable
+		- EC2 => Complete control over the database => launch an instance -> install database -> have full control now
+
+	Lesson - Amazon ElastiCache
+		- implementations of Redis and Memcached
+		- key/value store; high performance and low latency; put in front of database such as RDS and DynamoDB
+		- runs on EC2 instance, so choose an instance family/type
+		- Instance does database write on RDS => RDS loads data to ElastiCache Node => read for that data will be cache hit since it's in the ElastiCache Node already
+		- Memcached vs. Redis => image file uploaded: Memcached vs. Redis.PNG
+		- Use case: for static and frequently accessed data; if it's faster/cheaper to use cache than database 
+			=> require push-button scalability for memory, write and read 
+			=> Storing session state (=> DynamoDB or ElastiCache for this use case)
+			=> Leaderboards; Streaming data dashboards; web session store
+
+	Lesson - Scaling ElastiCache
+		- memorize the Memcached vs. Redis comparision chart(image file)
+
+	Lesson - Amazon DynamoDB
+		- Fully managed NoSQL database service; non-relational; serverless
+		- push button scaling => no down time; just enter the amount of performance you need for scaling database
+		- we create DynamoDB table => for scaling: enter the amount => it will spread the data across more node(table) in their data center
+		- Tables, Items(row of the table), Attributes(information associated with specific item)
+		- Set Time to Live(TTL) for when items in table expire and be deleted; no extra cost and does not use write capacity unit(WCU)/RCU(these are the performance of your table)
+			=> if you use WCU/RCU it will cost you bc; to delete item, you scan the table using RCU and delete it using WCU which cost money
+				=> TTL will be much cheaper 
+			=> Helps reduce storage and manage the table size over time
+		- partition key + sort key = composite key = Primary Key 
+		- Attributes doesn't need to be filled since this is non-relational
+		- 4-9s(99.99%) availability and 5-9s for Global Tables 
+		- On-demand backup and restore; Strongly consistent reads; support for ACID transactions
+		- milliseconds latency
+
+	Lesson - DynamoDB Streams
+		- every time you modify an item, it will record those changes into a stream that can then be processed in some way
+		- can be stored for up to 24 hours
+
+	Lesson - DynamoDB Accelerator (DAX)
+		- Fully managed in-memory cache for DynamoDB with microsecond latency (vs. milliseconds latency)
+		- compatible directly with the DynamoDB API; no need to reprogram; just repoint to DAX first instead of DynamoDB
+		- be read-through cache and write-through cache (means improve READ and WRITE performance)
+		- DAX will seat in front of DynamoDB within your instance VPC 
+			=> request from EC2 will go to DAX first and check
+			=> if cache doesn't exist, it goes to DynamoDB
+		- need to update the inbound rule allowing DynamoDB and DAX
+		- DAX need IAM role as well for permissions to access DynamoDB; same for EC2 - permissions to access DynamoDB + DAX
+		- ElastiCache is in-memory cahce service
+			=> DAX for DynamoDB
+			=> more management overhead => need to modify application code to point to cache
+				=> it needs to understand how to find information from the cache
+			=> ElastiCache supports more datastores(including DynamoDB)
+
+	Lesson - DynamoDB Global Tables
+		- Fully managed multi-region, multi-active database, multi-master solution
+		- Fully replicate DynamoDB table to another Region  
+		- can read/write to that Region and it will replicate the changes back again (Asynchoronous replication)
+		- Each replica table stores same set of data items
+		- use logic in the application to failover to a replica region 
+
+	Lesson - Amazon RedShift
+	Lesson - Amazon Elastic Map Reduce(EMR)
+	Lesson - Amazon Kinesis
+	Lesson - Amazon Athena and AWS Glue
+	Lesson - Amazon OpenSearch Service
+	Lesson - AWS Batch
+	Lesson - Other Database Services
+	Lesson - Other Analytics Services
