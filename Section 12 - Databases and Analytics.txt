@@ -11,6 +11,8 @@
 		- Disaster Recovery and Scaling Out: Have a RDS Master; have RDS Standby in other AZ(multi-AZ option) for disaster recovery 
 			=> Read Replicas(in the same AZ) are used for scaling database queries (reads only; write is still done to RDS Master; scaling out)
 		- SQL database; OLTP; easy to setup, highly available, fault tolerant, and scalable; common use cases include online stores and banking systems; can encrypt RDS instances, snapshots at rest and connections to RDS through KMS
+		*** Use Replica for regualr reporting tool that only needs Read request instead of on a Primary
+			=> You won't have any performance impact on your transactional database ***
 		
 	Lesson - Amazon RDS Backup and Recovery
 		- Automatic backups have upto 35 days of retention period for backup data; Manual backups does not expire 
@@ -111,8 +113,43 @@
 		- use logic in the application to failover to a replica region 
 
 	Lesson - Amazon RedShift
+		- data warehouse for analyzing data using standard SQL and existing Business Intelligence (BI) tools
+		- SQL based data warehouse used for analytics application
+		- relational database used for Online Analaytics Processing(OLAP)
+		- uses EC2 instances, must choose an instance family/type
+		- always keeps three copies of your data and provides continuous/incremental backups
+		- If you have one RDS to request Read => use RDS Read Replica
+		- if you have several(collection of) RDSs to read from => load data to Redshift and Read
+			=> Data can be analyzed with BI tools such as QuickSight using SQL 
+		- Data Sources for Redshift: RDS, DynamoDB, EMR, S3, Data Pipline, Glue, EC2, on-premises server
+		- For S3, use RedShift Spectrum can run SQL queries on data directly
+		- Use cases: complex queries on structured and semi-structured data; frequently accessed data that needs a consistent and highly structured format
+		- Automated provisioning, configuration and patching
+		- Data durability with continuous backup to S3; Scales with simple API calls; Exabyte scale query capability
+
 	Lesson - Amazon Elastic Map Reduce(EMR)
+		- ***Managed cluster platform that simplifies running big data frameworks
+			=> Apache ***Hadoop & Apache Spark = Framework for analyzing big data
+		- ***processing data for analytics and business intelligence
+		- transform and move large amounts of data
+		- EMR runs within AZ and can be attached to different data store options
+		- optionally attach EBS volumes 
+		- Have root access to cluster instances
+		- scale cluster instances or deploy multiple clusters 
+
 	Lesson - Amazon Kinesis
+		- Amazon Kinesis Data Streams => producers sends data to Kinesis => data is stored in shards for processing
+			=> Consumers process the data and save to destinations => Analaytics Tools like BI
+		- Kinesis Client Library (KCL) => helps you consume and process data from Kinesis data stream
+			=> runs on EC2 => enumerates shards and record processor 
+			=> One worker can process any number of shards; ***Each shard is processed by exactly one KCL worker 
+			=> A record processor maps to exactly one shard only
+		- Amazon Kinesis Data Analytics => real-time SQL queries processing for streaming data from KDS and KDF;
+			=> destination can be KDS, KDF or AWS Lambda 
+		- Amazon Kinesis Data Firehose => no shard; completely automated; elastic scalability
+			=> another AWS service for storing but data can be processed/transformed using Lambda optionally
+			=> Nearly real-time; lots of destination options 
+
 	Lesson - Amazon Athena and AWS Glue
 	Lesson - Amazon OpenSearch Service
 	Lesson - AWS Batch
