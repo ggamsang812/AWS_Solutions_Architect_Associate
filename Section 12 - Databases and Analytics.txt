@@ -151,7 +151,48 @@
 			=> Nearly real-time; lots of destination options 
 
 	Lesson - Amazon Athena and AWS Glue
-	Lesson - Amazon OpenSearch Service
+		Athena:
+		- (serverless) Point Athena at data source in S3 and run SQL queries
+			=> can query data in CSV, TSV, JSON, Parquet and ORC formats 
+		- Point at AWS Glue as (meta)Data Catalog, so it actually stores metadata
+		- SQL queries can also be run against other data sources in AWS and 3rd parties
+			=> will need Lambda function to connects Athena to data source in this case
+			=> data from source is mapped in tables in Athena and is queryable 
+		Glue:
+		- Full extract, transform and load (ETL) service
+		- used for preparing data for analytics; runs ETL jobs on Apache Spark environment
+		- discovers data and stores the associated metadata in the AWS Glue Data Catalog
+		- Use crawler to populate the AWS Glue Data Catalog with tables
+			=> crawl multiple data stores in a singel run; creates or updates one or more tables in Data Catalog
+
+	Lesson - Amazon OpenSearch(or ElasticSearch) Service
+		- 
+
 	Lesson - AWS Batch
+		- for Batch workload(Job) which usually takes a lot of resource
+		- provisions all of the compute environment(resource) you need o run the batch
+		- Can either be Managed/Unmanaged by AWS; AWS will take care of launch, manage, and termintate of resources 
+
 	Lesson - Other Database Services
+		*Just remember the keywords*
+		- DocumentDB for MongoDB compatibility; JSON data management
+		- Amazon Keyspaces for Apache Cassandra; SQL API code
+		- Amazon Neptune for graph data service: Gremlin, openCypher, SPARQL; track relationships between entities
+		- Quantum Ledger Database (QLDB) for cryptographically verifiable transaction log
+
 	Lesson - Other Analytics Services
+		*Just remember the keywords*
+		- Amazon Timestream for time series database service for IoT and operational applications
+		- AWS Data Exchange = data marketplace: Data Files, Data Tables, Data APIs, data lakes, ML models
+		- AWS Data Pipeline for ETL service; process and move data between AWS compute and storage services;
+			=> Data source can be on-premises 
+		- AWS Lake Formation for setting up secure data lakes in days (which usually takes a lot more)
+			=> save data to S3 data lake => clean and classify using ML algorithms
+		- Amazon Manged Streaming for Apache Kafka (MSK) for streaming data in real-time
+			=> similar to Kinesis but this is open-source project
+			=> Apache Kafka clusters and Apache ZooKeeper nodes
+	
+	What is Data Lake?
+		- centralized repository for storing all of structured and unstructured data at any scale 
+		- Big data processing, real-time analytics, ML in Data Lake
+		- Data Ware house is for only relational data; this is for both
