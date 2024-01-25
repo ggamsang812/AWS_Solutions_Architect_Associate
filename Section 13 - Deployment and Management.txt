@@ -1,0 +1,40 @@
+    Lesson - AWS CloudFormation
+        - "infrastructure as code" : define the infrastructure(VPC, EC2, serverless application) in code in a templete file
+            => supply the template file to CloudFormation => CF will build out entire infrastructure/application automatically
+        - infrastructure patterns are defined in a template file using code (JSON/YAML)
+        - ability to deploy same infrastructure in different Region or make copy
+        - consistency(fewer mistakes with code/no human error)
+        - less time and effort than configuring (similar) resource manually 
+        - version control and peer review for CloudFormation templates
+        - Free (you pay for resources provisioned)
+        - manage updates and dependencies
+        - used to rollback and delete the entire stack 
+        - StackSets = across multiple accounts and regions; 
+        - Change Sets = shows you how those changes might impact your existing resources before implementing them
+        - Nested Stack = Stack has Stack inside; To delete: clear the top stack and stacks below will be deleted
+
+    Lesson - AWS Elastic Beanstalk
+        - Automate the creation and management of web application running on EC2
+        - will create the entire environment (EC2, node.js, ASG, Load Balancer, RDS...)
+        - PaaS solution; Managing web apps 
+        - Web servers = standard applications that listen for / process HTTP requests (port 80); web application
+        - Workers = specialized applications that have a background processing task that listens for messages (like SQS)
+            => used for long-running tasks
+
+    Lesson - SSM (AWS Systems Manager) Parameter Store
+        - provides secure storage for configuration data and secrets
+
+    Lesson - AWS Config 
+        - 
+
+    Lesson - AWS Secrets Manager
+        - 
+
+    Lesson - AWS OpsWorks
+        - 
+
+    Lesson - AWS Resource Access Manager
+        -
+
+    Lesson - RPO, RTO, and DR Strategies
+        - 
