@@ -37,7 +37,7 @@ Lesson - AWS CloudTrail
     - retained for 90 days; Use CloudTrail Trail for logging to S3 for indefinite retention
     - within Region or all Regions; can trigger with API calls; stream event to CloudWatch Logs
     - Management events - who generated what API action on what resource
-    - Data events - what operations are performed on/in a resource
+    - Data events - what operations are performed on/in a resource; detailed information
     - Insights events - identify and respond to unuaual activity associated with API calls
     
 Lesson - Amazon EventBridge / CloudWatch Events (Refresher) 
