@@ -1,0 +1,71 @@
+AWS Amplify and AppSync
+    AWS Amplify:
+    - Set of tools and features for building full-stack applications on AWS
+    - Amplify Studio: visual interface for building web/mobile apps
+        => AWS Cloud Development Kit (CDK) for AWS services not available within Studio
+    - Amplify Libraries: connect mobile and web apps
+    - Amplify Hosting: CI/CD and hosting service for server-side rendered apps
+    AWS AppSync: 
+    - service to develop GraphQL APIs
+    - Applications can access, manipulate and receive real-time updates from multiple data source 
+    - automatically scales GraphQL API execution engine up and down to meet API request volumes
+    - Lambda, DynamoDB and Elasticsearch 
+    - Server-side data caching capabilities; reduce the need to directly access data sources
+
+AWS Device Farm
+    - application testing service used for web/mobile apps
+        => test how your apps look across different browser / devices
+        => test interaction with different devices (ex. gesture, swipe, etc..)
+    
+Machine Learning Services
+    AWS Rekognition: identifying information from images and videos (image/video analysis)
+    Amazon Transcribe: add speech to text capabilities to applications
+        => uses automatic speech recognition (ASR)
+    Amazon Translate: Neural machine translation service that delivers language translation
+    Amazon Textract: extract printed text, handwriting and data from any document; OCR
+    Amazon SageMaker: prepare, build, train, and deploy machine learning models
+    Amazon Comprehend: Natural-language processing (NLP) service
+        => uses ML to uncover information in unstructured data
+        => detect customer sentiment in your content 
+    Amazon Lex: Conversational AI for Chatbots
+        => Conversational interfaces into any application using voice and text
+    Amazon Polly: Turns text into lifelike speech; Text-to-Speech (TTS)
+    Amazon Forecast: Time-series forecasting service
+    Amazon DevOps Guru: Cloud operations service for improving application operational performance and availability
+        => detect operational issues using ML  
+
+Amazon Elastic Transcoder
+    - Transcodes video files to various formats/outputs 
+    - AWS Elemental MediaConvert is a new service for more options
+
+AWS License Manager
+    - manage licenses from software vendors like Microsoft, Oracle, SAP and IBM licenses
+    - centralized management of licenses for AWS and on-premises resources 
+    - track license usage; can enforce license limit; can set rules
+    
+AWS Compute Optimizer
+    - recommends optimal AWS resources for your workloads to reduce costs and improve performance
+    - uses ML to analyze historical utilization metrics 
+
+AWS Budgets
+    - set custom usage and reservation budgets
+    - Configure Alerts: get notified/alerts when likely to reach or exceed that budget
+    - Integrated with other AWS services 
+
+AWS Cost Explorer
+    - free tool that allows you to view charts of your costs
+    - look at past 13 months and forecast cost of next 3 months 
+    - discover patterns to identify cost problem areas 
+
+Cost Allocation Tags
+    - Use tagging to add metadata to our resources and use it for billing purposes
+        => attribute cost to certain resources 
+    - Use this tags in Cost Explorer as a filter (ex. Dev server, Prod server)
+    
+Other AWS Cost Management Tools     
+    AWS Cost & Usage Report: Publish AWS billing reports to S3
+        => break down costs by: Hour, day, month, product resource, tags
+    AWS Price List API: Query the prices of AWS services
+        => Price List Service API (Query API) - query with JSON 
+        => AWS Price List API (Bulk API) - query with HTML
+        => Alerts SNS when prices change 
