@@ -8,7 +8,7 @@
     Lesson 2 - Amazon S3 Overview
         - Accessing objects in a bucket by HTTP protocol is used with REST API(GET, PUT, POST, SELECT, DELETE)
         - S3 is a univeral namespace so bucket names must be unique globally => we use url to access S3, therefore the name must be unique
-        - bucket is within a Region
+        - bucket is within a Region; Regional service  
         - **best practice to create buckets in regions that are physically close to users to reduce latency
         - no hierarchy for objects within a bucket => just namespace => kind of make it look like it has a structure with folders 
         - Object name is the Key; data is the Value

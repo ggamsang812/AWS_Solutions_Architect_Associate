@@ -1,0 +1,87 @@
+AWS Migration Tools Overview 
+    - will usually talk about migrating service and transferring data from on-premise to AWS
+    - will need VPN, Direct Connect or Internet to connect corporate data center to AWS
+    - AWS Migration Hub: Monitor migrations that use AWS or partner tools
+
+AWS Application Discovery Service
+    - Collect data about servers in on-premises Data Center (DC)
+        => hostname, IP address, resource allocation and utilization detail on CPU, network, memory and disk
+    - use Agentless discovery(OVA) to deploy and connect to vCenter (VMware)
+        => Discovery Connector for VMware
+    - (Discovery Agent) Agent-based discovery for Windows/Linux, Hyper-V, Physical
+        => can use both for mixture case (for VMware and Windows?)
+    - Data can be saved to S3 and queried with Athena/QuickSight
+    
+AWS Database Migration Service (DMS)
+    - To migrate database into AWS data serive (ex. RDS)
+    - Use the Schema Conversion Tool(SCT) for heterogeneous migrations
+        => ex) Oracle and RedShift is not compatible => first convert the schema, migrate the data, migate to RedShift
+            => MySQL to Aurora is not compatible either
+        => destination include Aurora, RedShift, DynamoDB and DocumentDB
+            => On-Premises to Cloud 
+        => source can be EC2 or RDS as well => Cloud to Cloud
+    - Homogeneous migration; Development and Test; Database consolidation; continuous data replication
+        
+AWS Application Migration Service (MGN)
+    - To migrate servers into EC2 instances 
+    - Agentless snapshot-based replication is possible with the AWS MGN vCenter Client installed
+        => but AWS recommend agent-based replication when possible
+            => supports continuous data protection (CDP)
+    - Highly automated lift-and-shift (rehost) solution for migrating applications to AWS
+    - Utilizes continuous, block-level replication and enables short cutover windows measured in minutes
+        => minimize downtime for servers that must be migrated to AWS 
+    - SMS is older service and AWS recommend using MGN instead of SMS
+    - Integrates with Cloud Migration Factory for orchestrating manual processes
+    - can migrate virtual and physical servers
+    
+AWS Server Migration Service (SMS)
+    - utilizes incremental, snapshot-based replication and enables cutover windows measured in hours
+    - migrates VMware vSphere, Hyper-V and Azure virtual machines to EC2
+    - can migrate application migration: database server, app server, web server to SMS; 
+        => SMS creates AMI / CloudFormation (Template) => then forms EC2 instance group
+    
+AWS DataSync
+    - migrate from NAS/File Servers to S3/EFS 
+    - From Shared File System or Object Storage to S3, FSx or EFS
+    - Data is encrypted in transit with TLS
+    - Scheduled, automated data transfer 
+    - support AWS Snowcone => install DataSync agent on Snowcone
+    - support S3 on Outposts 
+    - can copy data between: Network File System, Hadoop Distributed File System (HDFS), etc..
+    - pay per-GB transferred and storage
+    
+AWS Snow Family
+    - Snowball and Snowmobile are used for migrating large volumes of data to AWS
+        => for LARGE volume (10s-100sTB); for small internet link (GB/sec);
+        => for highly burdened internet and they don't want to affect the existing internet link
+    - load huge volumes of data onto it quickly; transport it physically to AWS; then to S3
+    - Snowball is a device (80TB/50TB "petabyte scale"); Snowball Edge (100TB "petabyte scale")
+    - Snowmobile is a truck with a container in the back (100PB "exabyte scale")
+    - Snowball Edge Compute Optimized: Snowball device optimized for edge computing
+        => Provides block and object storage and optional GPU 
+        => maybe you have a factory where you don't have internet, but you need to collet data from sensor
+        => uses EC2 to process data at the edge and store it for transportation
+    - Snowball Edge Storage Optimized device
+        => provides block storage and S3-compatible object storage 
+    -Snowcone: small device used for edge computing, storage and data transfer
+        => send data to S3, EFS, FXs for Windows file server
+    - Cloud data migration; content distribution; tactical edge computing; machine learning; manufacturing; remote location with cimple data
+        
+The 7 Rs of Migration
+    (Least Effort to Most Effort)
+    - Retire = no longer needed, get rid of it
+    - Retain = Leave as is (revisit at a later date)
+    - Relocate = Move without modification (lift & shift); in the on-premise world
+    - Rehost = OS/App moved to another host system (lift & shift ); AWS term as lift&shift
+        => in reality you will modify something => lift, modify & shift
+        => AWS MGN, SMS and VM Import/Export 
+    - Repurchase = Use a different solution (e.g. SaaS) (ex. on-premise CRM to SalesForce)
+    - Replatform = ex) database to RDS; server to Elastic Beanstalk; may require refactoring; schema updates...
+        => AWS Database Migration Service (DMS) and Schema Conversion Tool(SCT)
+        => migrate EB using custom AMI, or code-level migration
+        => moderate development and migration effort 
+    - Refactor = Re-architect to a cloud-native serverless architecture
+        => utilizing full power of the cloud 
+        => serverless services and event-driven architecture patterns 
+        => from tranditional server to serverless cloud is going to require A LOT OF effort
+    - Rehost, Replatform, Refactor is relevant to AWS 

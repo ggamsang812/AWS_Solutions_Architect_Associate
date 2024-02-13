@@ -1,0 +1,71 @@
+    Lesson - AWS CloudFormation
+        - "infrastructure as code" : define the infrastructure(VPC, EC2, serverless application) in code in a templete file
+            => supply the template file to CloudFormation => CF will build out entire infrastructure/application automatically
+        - infrastructure patterns are defined in a template file using code (JSON/YAML)
+        - ability to deploy same infrastructure in different Region or make copy
+        - consistency(fewer mistakes with code/no human error)
+        - less time and effort than configuring (similar) resource manually 
+        - version control and peer review for CloudFormation templates
+        - Free (you pay for resources provisioned)
+        - manage updates and dependencies
+        - used to rollback and delete the entire stack 
+        - StackSets = across multiple accounts and regions; 
+        - Change Sets = shows you how those changes might impact your existing resources before implementing them
+        - Nested Stack = Stack has Stack inside; To delete: clear the top stack and stacks below will be deleted
+
+    Lesson - AWS Elastic Beanstalk
+        - Automate the creation and management of web application running on EC2
+        - will create the entire environment (EC2, node.js, ASG, Load Balancer, RDS...)
+        - PaaS solution; Managing web apps 
+        - Web servers = standard applications that listen for / process HTTP requests (port 80); web application
+        - Workers = specialized applications that have a background processing task that listens for messages (like SQS)
+            => used for long-running tasks
+
+1/25/24
+    Lesson - SSM (AWS Systems Manager) Parameter Store
+        - provides secure storage for configuration data and secrets
+        - no need to roate the keys; where Secrets Manager does it automatically
+            => will need custom Lambda to rotate the code if needed
+
+    Lesson - AWS Config 
+        - evaluates the configuration against desired configuration; 
+            => store it in the S3 => remediate the difference / trigger SNS or CloudWatch Events
+        - use Rule define how our configuration should be
+
+    Lesson - AWS Secrets Manager
+        - store and rotate secrets 
+        - automatic rotation offered for: RDS, Redshift, DocumentDB
+        - need Lambda function for automatic rotation on other services  
+
+    Lesson - AWS OpsWorks
+        - configuration management service; provides managed instances of Chef and Puppet
+
+    Lesson - AWS Resource Access Manager (RAM)
+        - enables you to share AWS resources within your account or across accounts 
+            => share VPC, components in VPC, subnets, databases, resources
+            => within AWS Organizations, OUs, IAM roles and users
+
+    Lesson - RPO, RTO, and DR(disaster recovery) Strategies
+        Recovery Point Objective (RPO)
+        - measurement of the amount of data that can be acceptably lost
+        - measured in seconds, minutes or hours
+        - if you can accept 2 hours of data lost (meaning 2hr RPO) => backups must be taken every 2 hours
+        - determined by how you take a backup of data
+            => synchronous replication? asynchronous? snapshots? tape backups? 
+
+        Recovery Time Objective (RTO)
+        - measurement amount of time it takes to restore after disaster event
+        - IT team has 4 hours to bring application back online after a disaster = 4hr RTO 
+        - determined by how quickly you can recover and bring system back online
+        - Fault tolerance? High availability/load balancing/auto scaling? 
+            cross-site recovery/automated recovery? Manual recovery?
+
+        - ex) 2hr RPO and 2hr RTO
+            => total of 4hr of timeframe when the data is not cmoing through bc the system is down
+
+        DR Strategies:
+        1) backup and restore => for low priority; lowest cost $
+        2) Pilot Light => data replicated; service idle/off; cost $$
+        3) Warm Standby => minimum resources always running; business critical; scale up/out; cost $$$
+        4) Multi-site active/active => AWS; cross-region; zero downtime; zero data loss; mission critical; cost $$$$
+        
