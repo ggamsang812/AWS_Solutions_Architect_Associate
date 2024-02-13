@@ -1,1 +1,64 @@
-12/20/2023
+12/22/2023
+    Lesson - DNS and Amazon Route 53
+        - The Domain Name System(DNS) - Domain name is resolved to the IP address of the webserver in the DNS Server
+        - used both in company and internet
+        - Amazon Route 53 is advanced DNS service 
+            - Hosted zone represents a set of private/public DNS records belonging to a domain => what's the IP address for this domain?
+            => Route 53 returns the address to the cilent and client now does HTTP GET request to given IP address(in AWS service)
+            - Use different routing policies depending on the use cases like you want IP address based on health check, region, latency, etc.. and make routing decision
+            - Features are:
+                1) Domain Registration 2) Hosted zone 3) Health Checks 4) Traffic Flow
+    
+    Lesson - Amazon Route 53 Hosted Zones
+        - Essentially a file that contains below records; all belong to a domain
+        - We create our DNS records in the Hosted zone will have:
+            1) Domain name
+            2) Type - Type A, etc...
+            3) Value - IP Address
+            4) TTL - How long your browser is going to cache the result before it ends up going out and asking DNS again to give it a new record
+                => Important set up b/c if they're too long and if something changes, your client will still try to connect to the older address
+        - In the public hosted zone, you get the address of the resources in public subnet directly
+        - In the private hosted zone:
+            => you can have any domain name you want
+            => Set a resources in both public subnet and private subnet
+            => Associte the private hosted zone to a VPC
+            => Enable DNS Hostnames and DNS Resolution => means instances will receive a DNS host name and DNS resolution will work 
+                => by default Route 53 will resolve DNS names
+            => instance in public subnet ask hosted zone the address of private instance
+            => hosted zone returns address => public subnet connects to private instance
+        - Migrate to/from Route 53
+            => Migrate from another DNS provider and import record
+            => Migrate a hosted zone to another AWS account 
+            => from Route 53 to another registrar
+            => Associte a Route 53 hosted zone with a VPC in another account
+                => To implement this, Authorize association with VPC in the second account 
+                => Create an association in the second account 
+    
+    Lesson - Route 53 Routing Policies
+        - Simple: Name, Type, Value, TTL 
+        - Failover: Name, Type, Value, Heatlh(required), Record Type(Primary/Secondary)
+            => Depending on the health check of the (primary) resource, DNS query will get routed to different address
+        - Geolocation: Name, Type, Value, Heatlh(optional), Geolocation(region of the client)
+            => if the client is from region specified in Geolocation, it will return the according value 
+        - Geoproximity: Must create a policy in Traffic Flow 
+            => you set the rule based on geographic coorinates and set the endpoints(ClondFront, Elastic Beanstalk, ELB, S3 and IP addresses)
+        - Latency: Name, Type, Value, Health(optional), Region
+            => depending on where clients are, they may get routed to a different region 
+        - Multivalue answer: Name, Type, Value, Health(required), Multi Value
+            => route connections to those records in a kind of load balancer fasion 
+        - Weighted: Name, Type, Value, Health(will check if those resources are healthy - optional), and 
+            Weight(depending on the weight, we'll have percentage of the traffic goes)
+        - IP-Based: we create CIDR collections which include the IP addresses and CIDR blocks of our clients
+            => CIDR collections are used to define IP addresses and CIDR blocks 
+            => create Routing rule to route based on a CIDR collection
+                => checks the source IP addresses of the client and then route that client based on the rules that we defined for that specific collection
+    
+    Lesson - Amazon Route 53 Resolver
+        - DNS Forwarder - when a DNS server can't answer a query but it knows where to go/forward the request on to; it will then do so
+        - can be recursive => go through different DNS service until it finds the result 
+        - With VPN connection(encrpyted, from customer gateway to VPN gateway connection):
+            - Outbound Endpoint: Instances send query to Route 53; 53 reutrns to Outbound Endpoint; OE connects to Corporate DNS server; DNS responds to query via Outbound Endpoint/Route 53
+            - Inbound Endpoint: Corporate data center client to DNS server; to Inbound Endpoint; to Route 53 which returns the result 
+        - Ensures either EC2 instances or clients in your on-premise data center are able to resolve records in both on-premise DNS server or in Route 53 hosted zone
+    
+    Lesson 
